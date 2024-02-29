@@ -28,6 +28,7 @@ export default function Signout() {
         setStates(prevState => ({...prevState, success: "Signed out successfully"}))
         navigate('/')
     }catch(error){
+        setStates(prevState => ({...prevState, success: ""}))
         alert(error.message);
     }finally{
       setStates(prevState => ({...prevState, loading: false}))
