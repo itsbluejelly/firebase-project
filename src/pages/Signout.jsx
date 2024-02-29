@@ -1,7 +1,7 @@
 // IMPORTING NECESSARY FILES
   // IMPORTING MODULES
 import { getAuth, deleteUser} from 'firebase/auth';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
     // IMPORTING COMPONENTS
 import { Link, useNavigate } from 'react-router-dom'; 
   // IMPORTING STYLESHEETS
@@ -12,7 +12,6 @@ export default function Signout() {
   // ENSURE USER IS AUTHENTICATEDD
   const user = getAuth();
   const navigate = useNavigate()
-  useEffect(() => {if(!user.currentUser) navigate('/auth/login')}, [user.currentUser, navigate])
   
   // DEFINING A STATE TO TRACK THE SUCCESS AND LOADING STATES
   const [states, setStates]= useState({

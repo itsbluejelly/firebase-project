@@ -1,6 +1,6 @@
 // IMPORTING NECESSARY FILES
   // IMPORTING MODULES
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 
 import { 
   getAuth, 
@@ -20,7 +20,6 @@ export default function Signin() {
   // ENSURE USER IS NOT AUTHENTICATEDD
   const user = getAuth();
   const navigate = useNavigate()
-  useEffect(() => {if(user.currentUser) navigate('/home/contacts')}, [user.currentUser, navigate])
   
   // DEFINING A STATE TO TRACK THE FORM
   const [formData, setFormData] = useState({
