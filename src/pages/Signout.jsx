@@ -1,7 +1,7 @@
 // IMPORTING NECESSARY FILES
   // IMPORTING MODULES
 import { getAuth, deleteUser} from 'firebase/auth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
     // IMPORTING COMPONENTS
 import { Link, useNavigate } from 'react-router-dom'; 
   // IMPORTING STYLESHEETS
@@ -9,24 +9,25 @@ import '../css/App.css';
 
 // EXPORTING A FUNCTION THAT RETURNS A SIGNOUT PAGE
 export default function Signout() {
+  // ENSURE USER IS AUTHENTICATEDD
+  const user = getAuth();
+  const navigate = useNavigate()
+  useEffect(() => {if(!user.currentUser) navigate('/auth/login')}, [user.currentUser, navigate])
+  
   // DEFINING A STATE TO TRACK THE SUCCESS AND LOADING STATES
   const [states, setStates]= useState({
     success: '',
     loading: false
   })
 
-  // GETTING THE USER CREDENTIALS
-  const auth = getAuth();
-  const navigate = useNavigate()
-
   // A FUNCTION TO HANDLE SIGNING OUT
   const handleSignout = async () => {
     setStates(prevState => ({...prevState, loading: true}))
 
     try{
-        await deleteUser(auth.currentUser)
+        await deleteUser(user.currentUser)
         setStates(prevState => ({...prevState, success: "Signed out successfully"}))
-        navigate('/')
+        navigate('/auth/login')
     }catch(error){
         setStates(prevState => ({...prevState, success: ""}))
         alert(error.message);
@@ -38,8 +39,8 @@ export default function Signout() {
   return (
     <div className='App'>
       <button className="button" onClick={handleSignout} disabled={states.loading}>Sign out</button>
-      <Link to="/contacts">Go back home</Link>
-      <Link to="/logout">Log out</Link>
+      <Link to="/home/contacts">Go back home</Link>
+      <Link to="/home/logout">Log out</Link>
 
       {states.loading && <p>Loading...</p>}
       {states.success && <p>{states.success}</p>}

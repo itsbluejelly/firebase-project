@@ -1,6 +1,6 @@
 // IMPORTING NECESSARY FILES
   // IMPORTING MODULES
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { 
   getAuth, 
@@ -17,7 +17,10 @@ import '../css/App.css';
 
 // EXPORTING A FUNCTION THAT RETURNS A SIGNIN PAGE
 export default function Signin() {
+  // ENSURE USER IS NOT AUTHENTICATEDD
+  const user = getAuth();
   const navigate = useNavigate()
+  useEffect(() => {if(user.currentUser) navigate('/home/contacts')}, [user.currentUser, navigate])
   
   // DEFINING A STATE TO TRACK THE FORM
   const [formData, setFormData] = useState({
@@ -32,7 +35,6 @@ export default function Signin() {
   })
 
   // GETTING THE USER CREDENTIALS
-  const auth = getAuth();
   const googleProvider = new GoogleAuthProvider()
   const githubProvider = new GithubAuthProvider()
 
@@ -47,9 +49,9 @@ export default function Signin() {
     setStates(prevState => ({...prevState, loading: true}))
 
     try{
-      await signInWithEmailAndPassword(auth, formData.email, formData.password)
+      await signInWithEmailAndPassword(user, formData.email, formData.password)
       setStates(prevState => ({...prevState, success: "Signed in successfully"}))
-      return navigate('/contacts')
+      return navigate('/home/contacts')
     }catch(error){
       setStates(prevState => ({...prevState, success: ""}))
       alert(error.message);
@@ -63,9 +65,9 @@ export default function Signin() {
     setStates(prevState => ({...prevState, loading: true}))
 
     try{
-        await signInWithPopup(auth, googleProvider)
+        await signInWithPopup(user, googleProvider)
         setStates(prevState => ({...prevState, success: "Signed in successfully"}))
-        return navigate('/contacts')
+        return navigate('/home/contacts')
     }catch(error){
       setStates(prevState => ({...prevState, success: ""}))
 
@@ -86,9 +88,9 @@ export default function Signin() {
     setStates(prevState => ({...prevState, loading: true}))
 
     try{
-        await signInWithPopup(auth, githubProvider)
+        await signInWithPopup(user, githubProvider)
         setStates(prevState => ({...prevState, success: "Signed in successfully"}))
-        return navigate('/contacts')
+        return navigate('/home/contacts')
     }catch(error){
       setStates(prevState => ({...prevState, success: ""}))
       
@@ -124,7 +126,7 @@ export default function Signin() {
       <button className="button" disabled={states.loading} onClick={handleSubmit}>Sign in with email</button>
       <button className="button" disabled={states.loading} onClick={handleGoogle}>Sign in with Google</button>
       <button className="button" disabled={states.loading} onClick={handleGithub}>Sign in with Github</button>
-      <Link to="/">Don&apos;t have an account? Sign up</Link>
+      <Link to="/auth/signup">Don&apos;t have an account? Sign up</Link>
 
       {states.loading && <p>Loading...</p>}
       {states.success && <p>{states.success}</p>}

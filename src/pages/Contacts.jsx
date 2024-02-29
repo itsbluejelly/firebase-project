@@ -7,11 +7,13 @@ import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase
     // IMPORTING STYLESHEETS
 import '../css/Contacts.css'
     // IMPORTING COMPONENTS
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 function Contacts() {
     // ENSURE USER IS AUTHENTICATEDD
-    getAuth();
+    const user = getAuth();
+    const navigate = useNavigate()
+    React.useEffect(() => {if(!user.currentUser) navigate('/auth/login')}, [user.currentUser, navigate])
     
     // DEFINING STATES
         // A STATE TO KEEP TRACK OF FORM DATA
@@ -190,8 +192,8 @@ function Contacts() {
                 </div>
             )}
 
-        <Link to="/logout">Log out</Link>{" "}
-        <Link to="/signout">Sign out</Link>
+        <Link to="/home/logout">Log out</Link>{" "}
+        <Link to="/home/signout">Sign out</Link>
 
         {states.loading && <p>Loading...</p>}
         {states.success && <p>{states.success}</p>}
